@@ -58,7 +58,7 @@
                 @guest
                     <div class="d-flex">
                         <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">เข้าสู่ระบบ</a>
-                        <a href="{{ route('register') }}" class="btn btn-success">ลงทะเบียน</a>
+                        <a href="{{ route('register') }}" class="btn btn-outline-success">ลงทะเบียน</a>
                     </div>
                 @else
                     <div class="d-flex align-items-center">

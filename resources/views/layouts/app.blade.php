@@ -44,16 +44,6 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Navigation Links -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">
-                                <i class="fas fa-home me-1"></i>หน้าหลัก
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('portfolios.index') }}">
-                                <i class="fas fa-folder me-1"></i>ผลงานทั้งหมด
-                            </a>
-                        </li>
 
                         @auth
                             <li class="nav-item">
@@ -75,7 +65,7 @@
 
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="btn btn-dark" href="{{ route('register') }}">
+                                    <a class="btn btn-outline-dark" href="{{ route('register') }}">
                                         <i class="fas fa-user-plus me-1"></i>ลงทะเบียน
                                     </a>
                                 </li>
