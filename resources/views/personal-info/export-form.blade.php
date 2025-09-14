@@ -206,18 +206,37 @@ document.getElementById('date_range').addEventListener('change', function() {
 
 // ดูตัวอย่างข้อมูล
 function previewData() {
-    const form = document.querySelector('form');
-    const formData = new FormData(form);
-    const params = new URLSearchParams(formData);
+    // เก็บค่าจากฟอร์ม
+    const formData = {
+        date_range: document.getElementById('date_range').value,
+        start_date: document.getElementById('start_date').value,
+        end_date: document.getElementById('end_date').value,
+        faculty: document.getElementById('faculty').value,
+        major: document.getElementById('major').value,
+        status: document.getElementById('status').value,
+        per_page: document.getElementById('per_page').value
+    };
+    
+    // สร้าง query string
+    const params = new URLSearchParams();
+    Object.keys(formData).forEach(key => {
+        if (formData[key]) {
+            params.append(key, formData[key]);
+        }
+    });
     
     // แสดง loading
     document.getElementById('preview_content').innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> กำลังโหลดข้อมูล...</div>';
     document.getElementById('preview_card').style.display = 'block';
     
+    // Debug: แสดงค่าที่ส่ง
+    console.log('Sending parameters:', params.toString());
+    
     // ส่ง request เพื่อดูตัวอย่าง
     fetch(`{{ route('personal-info.preview-export') }}?${params.toString()}`)
         .then(response => response.json())
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
                 document.getElementById('preview_content').innerHTML = data.html;
             } else {
@@ -225,6 +244,7 @@ function previewData() {
             }
         })
         .catch(error => {
+            console.error('Error:', error);
             document.getElementById('preview_content').innerHTML = '<div class="alert alert-danger">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
         });
 }

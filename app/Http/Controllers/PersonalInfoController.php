@@ -1212,6 +1212,9 @@ class PersonalInfoController extends Controller
 
         $query = PersonalInfo::query();
 
+        // Debug: Log request parameters
+        \Log::info('Preview Export Request:', $request->all());
+
         // Filter by date range
         $dateRange = $request->get('date_range', 'all');
         if ($dateRange !== 'all') {
@@ -1219,18 +1222,21 @@ class PersonalInfoController extends Controller
         }
 
         // Filter by faculty
-        if ($request->filled('faculty')) {
+        if ($request->filled('faculty') && $request->faculty !== '') {
             $query->where('faculty', $request->faculty);
+            \Log::info('Filtering by faculty:', ['faculty' => $request->faculty]);
         }
 
         // Filter by major
-        if ($request->filled('major')) {
+        if ($request->filled('major') && $request->major !== '') {
             $query->where('major', $request->major);
+            \Log::info('Filtering by major:', ['major' => $request->major]);
         }
 
         // Filter by status
-        if ($request->filled('status')) {
+        if ($request->filled('status') && $request->status !== '') {
             $query->where('status', $request->status);
+            \Log::info('Filtering by status:', ['status' => $request->status]);
         }
 
         // Get data with pagination
@@ -1241,13 +1247,20 @@ class PersonalInfoController extends Controller
             $personalInfos = $query->orderByDesc('created_at')->paginate($perPage);
         }
 
+        // Debug: Log query results
+        \Log::info('Query results count:', ['count' => $personalInfos->count()]);
+
         // Generate preview HTML
         $html = view('personal-info.preview-table', compact('personalInfos'))->render();
 
         return response()->json([
             'success' => true,
             'html' => $html,
-            'count' => $personalInfos->count()
+            'count' => $personalInfos->count(),
+            'debug' => [
+                'filters' => $request->only(['date_range', 'faculty', 'major', 'status', 'per_page']),
+                'query_count' => $personalInfos->count()
+            ]
         ]);
     }
 
@@ -1307,17 +1320,17 @@ class PersonalInfoController extends Controller
         }
 
         // Filter by faculty
-        if ($request->filled('faculty')) {
+        if ($request->filled('faculty') && $request->faculty !== '') {
             $query->where('faculty', $request->faculty);
         }
 
         // Filter by major
-        if ($request->filled('major')) {
+        if ($request->filled('major') && $request->major !== '') {
             $query->where('major', $request->major);
         }
 
         // Filter by status
-        if ($request->filled('status')) {
+        if ($request->filled('status') && $request->status !== '') {
             $query->where('status', $request->status);
         }
 

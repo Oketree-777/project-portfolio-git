@@ -1,6 +1,26 @@
 @if($personalInfos->count() > 0)
     <div class="alert alert-info">
         <i class="fas fa-info-circle"></i> พบข้อมูล {{ $personalInfos->count() }} รายการ
+        @if(request()->hasAny(['faculty', 'major', 'status', 'date_range']))
+            <br><small class="text-muted">
+                <strong>เงื่อนไขการกรอง:</strong>
+                @if(request('faculty'))
+                    คณะ: {{ request('faculty') }}
+                @endif
+                @if(request('major'))
+                    @if(request('faculty')) | @endif
+                    สาขา: {{ request('major') }}
+                @endif
+                @if(request('status'))
+                    @if(request('faculty') || request('major')) | @endif
+                    สถานะ: {{ request('status') == 'approved' ? 'อนุมัติแล้ว' : (request('status') == 'pending' ? 'รอการอนุมัติ' : 'ไม่อนุมัติ') }}
+                @endif
+                @if(request('date_range') && request('date_range') != 'all')
+                    @if(request('faculty') || request('major') || request('status')) | @endif
+                    ช่วงเวลา: {{ request('date_range') == 'today' ? 'วันนี้' : (request('date_range') == 'week' ? '7 วันล่าสุด' : (request('date_range') == 'month' ? '30 วันล่าสุด' : request('date_range'))) }}
+                @endif
+            </small>
+        @endif
     </div>
     
     <div class="table-responsive">
